@@ -20,7 +20,7 @@ jobs:
       uses: espressif/esp-idf-ci-action@v1
       with:
         esp_idf_version: v3.3.1
-        path: './Hardware'
+        path: './Software'
         
     - name: List build artefacts
       run: |
