@@ -31,7 +31,7 @@ jobs:
         zip /tmp/Firmware.zip ./bootloader/bootloader.bin ./partition_table/partition-table.bin sauvc-idf-only.bin
 
     - name: Release with Notes
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v2
       with:
         files: |
           /tmp/Firmware.zip
