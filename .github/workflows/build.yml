@@ -25,7 +25,7 @@ jobs:
         
     - name: List build artefacts
       run: |
-        ls -l build/
+        ls -l ./Software/build/
     
     - name: Store Artifacts
       uses: actions/upload-artifact@v4
