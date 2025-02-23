@@ -17,7 +17,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: esp-idf build
-      uses: espressif/esp-idf-ci-action@main
+      uses: espressif/esp-idf-ci-action@v1
       with:
         esp_idf_version: v3.3.1
         path: './Hardware'
@@ -27,7 +27,7 @@ jobs:
         ls -l build/
     
     - name: Store Artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: SAUVC_2025.bin 
         path: |
