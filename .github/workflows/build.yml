@@ -9,7 +9,30 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  paths-filter:
+    runs-on: ubuntu-latest
+    outputs:
+      file_changed: ${{ steps.filter.outputs.workflows }}
+    steps:
+    - uses: actions/checkout@v4
+    - uses: dorny/paths-filter@v3
+      id: filter
+      with:
+        filters: |
+          workflows:
+            - '.github/workflows/**'
+            - 'Software/**'
+    # run only if 'workflows' files were changed
+    - name: workflow tests
+      if: steps.filter.outputs.workflows == 'true'
+      run: echo "File changed"
+
+    # run only if not 'workflows' files were changed
+    - name: not workflow tests
+      if: steps.filter.outputs.workflows != 'true'
+      run: echo "No file changed"
+
+  conditional_job:
     runs-on: ubuntu-latest
 
     steps:
