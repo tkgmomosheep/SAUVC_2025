@@ -8,7 +8,8 @@
 3. Press connect in Program, select the correct port
 4. Set Flash Address according to the following table
 | Flash Address | File                |
-|---------------|---------------------|
+|:-------------:|:-------------------:|
 | 0x0           | bootloader.bin      |
 | 0x10000       | sauvc-idf-only.bin  |
 | 0x8000        | partition-table.bin |
+5. Press Flash
