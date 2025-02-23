@@ -13,19 +13,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Update apt-get
-      run: sudo apt-get update
-
-    - name: Update cmake
-      run: sudo apt-get install cmake
-
     - name: Checkout repo
       uses: actions/checkout@v4
 
     - name: esp-idf build
       uses: espressif/esp-idf-ci-action@v1
       with:
-        esp_idf_version: v3.3.1
+        esp_idf_version: latest
         path: './Software'
         
     - name: List build artefacts
