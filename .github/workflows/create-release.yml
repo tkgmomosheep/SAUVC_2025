@@ -1,0 +1,39 @@
+name: Create Release
+on:
+  push:
+    # Sequence of patterns matched against refs/tags
+    tags:
+      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+
+
+jobs:
+  build:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+
+    - name: esp-idf build
+      uses: espressif/esp-idf-ci-action@v1
+      with:
+        esp_idf_version: latest
+        target: esp32s3
+        path: './Software'
+
+    - name: List build artefacts
+      run: |
+        ls -l ./Software/build/
+
+    - name: Zip Firmware
+      run: |
+        cd Software/build
+        zip -r Firmware_${{ github.ref }}.zip bootloader/bootloader.bin partition_table/partition-table.bin sauvc-idf-only.bin
+
+    - name: Release with Notes
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          Software/build/Firmware_${{ github.ref }}.zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
