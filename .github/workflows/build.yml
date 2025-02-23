@@ -13,6 +13,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Update apt-get
+      run: sudo apt-get update
+
+    - name: Update cmake
+      run: sudo apt-get install cmake
+
     - name: Checkout repo
       uses: actions/checkout@v4
 
