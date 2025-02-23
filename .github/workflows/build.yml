@@ -32,4 +32,4 @@ jobs:
       with:
         name: SAUVC_2025.bin 
         path: |
-          build/SAUVC_2025.bin
+          ./Software/build/sauvf-idf-only.bin
