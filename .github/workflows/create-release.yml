@@ -1,39 +1,46 @@
 name: Create Release
 on:
   push:
-    # Sequence of patterns matched against refs/tags
     tags:
-      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
-
+      - 'v*' # e.g. v1.0, v20.15.10
 
 jobs:
   build:
     name: Create Release
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout repo
-      uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-    - name: esp-idf build
-      uses: espressif/esp-idf-ci-action@v1
-      with:
-        esp_idf_version: latest
-        target: esp32s3
-        path: './Software'
+      - name: esp-idf build
+        uses: espressif/esp-idf-ci-action@v1
+        with:
+          esp_idf_version: latest
+          target: esp32s3
+          path: './Software'
 
-    - name: List build artefacts
-      run: |
-        ls -l ./Software/build/
+      - name: List build artefacts
+        run: |
+          ls -l ./Software/build/
 
-    - name: Zip Firmware
-      run: |
-        cd ./Software/build
-        zip /tmp/Firmware${GITHUB_REF#refs/tags/}.zip ./bootloader/bootloader.bin ./partition_table/partition-table.bin sauvc-idf-only.bin
+      - name: Zip Firmware
+        id: zip_firmware
+        run: |
+          cd ./Software/build
+          # Extract the tag from GITHUB_REF (e.g., "refs/tags/v1.0" becomes "v1.0")
+          tag=${GITHUB_REF#refs/tags/}
+          # Get the short commit hash
+          commit_hash=$(git rev-parse --short HEAD)
+          # Define the zip file name based on the tag and commit hash
+          firmware_zip="/tmp/Firmware_${tag}_${commit_hash}.zip"
+          echo "Creating zip file: $firmware_zip"
+          zip "$firmware_zip" ./bootloader/bootloader.bin ./partition_table/partition-table.bin sauvc-idf-only.bin
+          # Pass the zip file path as an output for later steps
+          echo "firmware_zip=$firmware_zip" >> $GITHUB_OUTPUT
 
-    - name: Release with Notes
-      uses: softprops/action-gh-release@v2
-      with:
-        files: |
-          /tmp/Firmware${GITHUB_REF#refs/tags/}.zip
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Release with Notes
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ steps.zip_firmware.outputs.firmware_zip }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
