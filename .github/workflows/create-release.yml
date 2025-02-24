@@ -28,12 +28,12 @@ jobs:
     - name: Zip Firmware
       run: |
         cd ./Software/build
-        zip /tmp/Firmware.zip ./bootloader/bootloader.bin ./partition_table/partition-table.bin sauvc-idf-only.bin
+        zip /tmp/Firmware${GITHUB_REF#refs/tags/}.zip ./bootloader/bootloader.bin ./partition_table/partition-table.bin sauvc-idf-only.bin
 
     - name: Release with Notes
       uses: softprops/action-gh-release@v2
       with:
         files: |
-          /tmp/Firmware.zip
+          /tmp/Firmware${GITHUB_REF#refs/tags/}.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

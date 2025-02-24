@@ -49,10 +49,15 @@ jobs:
     - name: List build artefacts
       run: |
         ls -l ./Software/build/
-    
+
+    - name: Zip Firmware
+      run: |
+        cd ./Software/build
+        zip /tmp/Firmware-${GITHUB_REF#refs/tags/}.zip ./bootloader/bootloader.bin ./partition_table/partition-table.bin sauvc-idf-only.bin    
+          
     - name: Store Artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: SAUVC_2025.bin 
+        name: Firmware${GITHUB_REF#refs/tags/}.zip
         path: |
-          ./Software/build/sauvc-idf-only.bin
+          /tmp/Firmware${GITHUB_REF#refs/tags/}.zip
